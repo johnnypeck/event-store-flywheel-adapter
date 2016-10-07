@@ -54,7 +54,7 @@ final class FlywheelEventStoreAdapterFactory implements RequiresConfig, Requires
         $config = $container->get('config');
         $config = $this->options($config)['adapter']['options'];
 
-        if (!is_dir($config['dir'])) {
+        if (! is_dir($config['dir'])) {
             throw new ConfigurationException(sprintf(
                 '%s was not able to locate %s',
                 __CLASS__,

@@ -1,26 +1,46 @@
 <?php
-
-$header = <<<EOF
-This file is part of the prooph/event-store-flywheel-adapter.
-
-(c) 2016 prooph software GmbH <contact@prooph.de>
-
-For the full copyright and license information, please view the LICENSE
-file that was distributed with this source code.
-EOF;
-
-Symfony\CS\Fixer\Contrib\HeaderCommentFixer::setHeader($header);
-
-return Symfony\CS\Config\Config::create()
-    ->level(Symfony\CS\FixerInterface::SYMFONY_LEVEL)
-    ->fixers(array(
-        'header_comment',
-        'ordered_use',
+$finder = Symfony\CS\Finder\DefaultFinder::create()
+    ->in('examples')
+    ->in('src')
+    ->in('tests');
+$config = Symfony\CS\Config\Config::create();
+$config->level(null);
+$config->fixers(
+    array(
+        'braces',
+        'class_definition',
+        'duplicate_semicolon',
+        'elseif',
+        'empty_return',
+        'encoding',
+        'eof_ending',
+        'function_call_space',
+        'function_declaration',
+        'indentation',
+        'join_function',
+        'line_after_namespace',
+        'linefeed',
+        'logical_not_operators_with_successor_space',
+        'lowercase_constants',
+        'lowercase_keywords',
+        'method_argument_space',
+        'multiple_use',
+        'no_trailing_whitespace_in_comment',
+        'object_operator',
+        'parenthesis',
+        'php_closing_tag',
+        'remove_lines_between_uses',
+        'single_line_after_imports',
         'short_array_syntax',
-    ))
-    ->setUsingCache(true)
-    ->setUsingLinter(false)
-    ->finder(
-        Symfony\CS\Finder\DefaultFinder::create()->in([__DIR__])
+        'short_tag',
+        'standardize_not_equal',
+        'switch_case_semicolon_to_colon',
+        'switch_case_space',
+        'trailing_spaces',
+        'unused_use',
+        'visibility',
+        'whitespacy_lines',
     )
-;
+);
+$config->finder($finder);
+return $config;
