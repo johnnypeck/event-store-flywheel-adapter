@@ -1,13 +1,14 @@
 <?php
-
-/*
+/**
  * This file is part of the prooph/event-store-flywheel-adapter.
- *
- * (c) 2016 prooph software GmbH <contact@prooph.de>
+ * (c) 2014-2016 prooph software GmbH <contact@prooph.de>
+ * (c) 2015-2016 Sascha-Oliver Prolic <saschaprolic@googlemail.com>
  *
  * For the full copyright and license information, please view the LICENSE
  * file that was distributed with this source code.
  */
+
+declare(strict_types=1);
 
 namespace Prooph\EventStore\Adapter\Flywheel;
 
@@ -42,58 +43,37 @@ final class FlywheelEventStoreAdapter implements Adapter
      */
     private $messageConverter;
 
-    /**
-     * @param string           $rootDir          The root directory to store the event files
-     * @param MessageFactory   $messageFactory   To create message from array
-     * @param MessageConverter $messageConverter To convert message into array
-     */
-    public function __construct($rootDir, MessageFactory $messageFactory, MessageConverter $messageConverter)
+    public function __construct(string $rootDir, MessageFactory $messageFactory, MessageConverter $messageConverter)
     {
         $this->rootDir = $rootDir;
         $this->messageFactory = $messageFactory;
         $this->messageConverter = $messageConverter;
     }
 
-    /**
-     * @param Stream $stream
-     */
-    public function create(Stream $stream)
+    public function create(Stream $stream): void
     {
         $this->appendTo($stream->streamName(), $stream->streamEvents());
     }
 
-    /**
-     * @param StreamName $streamName
-     * @param Iterator   $domainEvents
-     */
-    public function appendTo(StreamName $streamName, Iterator $streamEvents)
+    public function appendTo(StreamName $streamName, Iterator $streamEvents): void
     {
         foreach ($streamEvents as $event) {
             $this->insertEvent($streamName, $event);
         }
     }
 
-    /**
-     * @param StreamName $streamName
-     * @param null|int   $minVersion Minimum version an event should have
-     *
-     * @return Stream
-     */
-    public function load(StreamName $streamName, $minVersion = null)
+    public function load(StreamName $streamName, int $minVersion = null): ?Stream
     {
         $events = $this->loadEvents($streamName, [], $minVersion);
+
+        if (! $events->count()) {
+            return null;
+        }
 
         return new Stream($streamName, $events);
     }
 
-    /**
-     * @param StreamName $streamName
-     * @param array      $metadata   If empty array is provided, then all events should be returned
-     * @param null|int   $minVersion Minimum version an event should have
-     *
-     * @return ArrayIterator
-     */
-    public function loadEvents(StreamName $streamName, array $metadata = [], $minVersion = null)
+    public function loadEvents(StreamName $streamName, array $metadata = [], int $minVersion = null): Iterator
     {
         $repository = $this->getRepositoryForStream($streamName);
 
@@ -119,14 +99,7 @@ final class FlywheelEventStoreAdapter implements Adapter
         return new ArrayIterator($events);
     }
 
-    /**
-     * @param StreamName             $streamName
-     * @param DateTimeInterface|null $since
-     * @param array                  $metadata
-     *
-     * @return Iterator
-     */
-    public function replay(StreamName $streamName, DateTimeInterface $since = null, array $metadata = [])
+    public function replay(StreamName $streamName, DateTimeInterface $since = null, array $metadata = []): Iterator
     {
         $repository = $this->getRepositoryForStream($streamName);
 
@@ -154,11 +127,7 @@ final class FlywheelEventStoreAdapter implements Adapter
         return new ArrayIterator($events);
     }
 
-    /**
-     * @param StreamName $streamName
-     * @param Message    $event
-     */
-    private function insertEvent(StreamName $streamName, Message $event)
+    private function insertEvent(StreamName $streamName, Message $event): void
     {
         $repository = $this->getRepositoryForStream($streamName);
         $document = $this->convertEventToDocument($event);
@@ -166,12 +135,7 @@ final class FlywheelEventStoreAdapter implements Adapter
         $repository->store($document);
     }
 
-    /**
-     * @param Message $event
-     *
-     * @return Document
-     */
-    private function convertEventToDocument(Message $event)
+    private function convertEventToDocument(Message $event): Document
     {
         $eventArr = $this->messageConverter->convertToArray($event);
 
@@ -192,12 +156,7 @@ final class FlywheelEventStoreAdapter implements Adapter
         return $document;
     }
 
-    /**
-     * @param Document $document
-     *
-     * @return Message
-     */
-    private function convertDocumentToEvent(Document $document)
+    private function convertDocumentToEvent(Document $document): Message
     {
         $createdAt = \DateTimeImmutable::createFromFormat(
             'Y-m-d\TH:i:s.u',
@@ -214,12 +173,7 @@ final class FlywheelEventStoreAdapter implements Adapter
         ]);
     }
 
-    /**
-     * @param StreamName $streamName
-     *
-     * @return Repository
-     */
-    private function getRepositoryForStream(StreamName $streamName)
+    private function getRepositoryForStream(StreamName $streamName): Repository
     {
         return new Repository($streamName->toString(), new Config($this->rootDir));
     }

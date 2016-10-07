@@ -1,13 +1,14 @@
 <?php
-
-/*
+/**
  * This file is part of the prooph/event-store-flywheel-adapter.
- *
- * (c) 2016 prooph software GmbH <contact@prooph.de>
+ * (c) 2014-2016 prooph software GmbH <contact@prooph.de>
+ * (c) 2015-2016 Sascha-Oliver Prolic <saschaprolic@googlemail.com>
  *
  * For the full copyright and license information, please view the LICENSE
  * file that was distributed with this source code.
  */
+
+declare(strict_types=1);
 
 namespace Prooph\EventStore\Adapter\Flywheel\Container;
 
@@ -26,10 +27,7 @@ final class FlywheelEventStoreAdapterFactory implements RequiresConfig, Requires
 {
     use ConfigurationTrait;
 
-    /**
-     * {@inheritdoc}
-     */
-    public function dimensions()
+    public function dimensions(): array
     {
         return ['prooph', 'event_store'];
     }
@@ -39,17 +37,19 @@ final class FlywheelEventStoreAdapterFactory implements RequiresConfig, Requires
      */
     public function mandatoryOptions()
     {
-        return ['adapter' => ['options' => ['dir']]];
+        return [
+            'adapter' => [
+                'options' => [
+                    'dir'
+                ]
+            ]
+        ];
     }
 
     /**
-     * @param ContainerInterface $container
-     *
      * @throws ConfigurationException
-     *
-     * @return FlywheelEventStoreAdapter
      */
-    public function __invoke(ContainerInterface $container)
+    public function __invoke(ContainerInterface $container): FlywheelEventStoreAdapter
     {
         $config = $container->get('config');
         $config = $this->options($config)['adapter']['options'];

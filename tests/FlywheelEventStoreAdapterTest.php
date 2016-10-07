@@ -1,13 +1,14 @@
 <?php
-
-/*
+/**
  * This file is part of the prooph/event-store-flywheel-adapter.
- *
- * (c) 2016 prooph software GmbH <contact@prooph.de>
+ * (c) 2014-2016 prooph software GmbH <contact@prooph.de>
+ * (c) 2015-2016 Sascha-Oliver Prolic <saschaprolic@googlemail.com>
  *
  * For the full copyright and license information, please view the LICENSE
  * file that was distributed with this source code.
  */
+
+declare(strict_types=1);
 
 namespace ProophTest\EventStore\Adapter\Flywheel;
 
@@ -32,7 +33,7 @@ class FlywheelEventStoreAdapterTest extends TestCase
      */
     private $adapter;
 
-    protected function setUp()
+    protected function setUp(): void
     {
         $this->rootDir = sys_get_temp_dir().'/FlywheelEventStoreAdapterTest_'.mt_rand();
 
@@ -47,14 +48,14 @@ class FlywheelEventStoreAdapterTest extends TestCase
         );
     }
 
-    protected function tearDown()
+    protected function tearDown(): void
     {
         if (!$this->removePath($this->rootDir)) {
             throw new \RuntimeException('Unable to remove the temporary root directory');
         }
     }
 
-    private function removePath($path)
+    private function removePath(string $path): bool
     {
         if (is_file($path)) {
             return @unlink($path);
@@ -72,7 +73,7 @@ class FlywheelEventStoreAdapterTest extends TestCase
     /**
      * @test
      */
-    public function it_creates_and_load_a_stream()
+    public function it_creates_and_load_a_stream(): void
     {
         // Create stream
         $stream = $this->createStream();
@@ -99,7 +100,7 @@ class FlywheelEventStoreAdapterTest extends TestCase
     /**
      * @test
      */
-    public function it_appends_events_to_a_stream()
+    public function it_appends_events_to_a_stream(): void
     {
         // Create stream
         $stream = $this->createStream();
@@ -128,7 +129,7 @@ class FlywheelEventStoreAdapterTest extends TestCase
     /**
      * @test
      */
-    public function it_loads_events_from_min_version_on()
+    public function it_loads_events_from_min_version_on(): void
     {
         // Create stream
         $stream = $this->createStream();
@@ -153,7 +154,7 @@ class FlywheelEventStoreAdapterTest extends TestCase
     /**
      * @test
      */
-    public function it_replays()
+    public function it_replays(): void
     {
         // Create stream
         $stream = $this->createStream();
@@ -180,7 +181,7 @@ class FlywheelEventStoreAdapterTest extends TestCase
     /**
      * @test
      */
-    public function it_replays_from_specific_date()
+    public function it_replays_from_specific_date(): void
     {
         // Create stream
         $stream = $this->createStream();
@@ -207,7 +208,7 @@ class FlywheelEventStoreAdapterTest extends TestCase
     /**
      * @test
      */
-    public function it_replays_events_of_two_aggregates_in_a_single_stream_in_correct_order()
+    public function it_replays_events_of_two_aggregates_in_a_single_stream_in_correct_order(): void
     {
         // Create stream
         $stream = $this->createStream();
@@ -238,10 +239,7 @@ class FlywheelEventStoreAdapterTest extends TestCase
         $this->assertEquals($expectedPayloads, $replayedPayloads);
     }
 
-    /**
-     * @return Stream
-     */
-    private function createStream()
+    private function createStream(): Stream
     {
         $streamEvent = UserCreated::withPayloadAndSpecifiedCreatedAt(
             ['name' => 'Max Mustermann', 'email' => 'contact@prooph.de'],
