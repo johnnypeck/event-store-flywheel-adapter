@@ -59,5 +59,11 @@
     },
     "config": {
         "process-timeout": 0
-    }
+    },
+    "repositories": [
+        {
+            "type": "git",
+            "url": "https://github.com/prolic/prophecy.git"
+        }
+    ]
 }
