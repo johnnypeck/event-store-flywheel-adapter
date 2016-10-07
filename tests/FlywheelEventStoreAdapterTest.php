@@ -37,7 +37,7 @@ class FlywheelEventStoreAdapterTest extends TestCase
     {
         $this->rootDir = sys_get_temp_dir().'/FlywheelEventStoreAdapterTest_'.mt_rand();
 
-        if (!is_dir($this->rootDir) && !@mkdir($this->rootDir)) {
+        if (! is_dir($this->rootDir) && ! @mkdir($this->rootDir)) {
             throw new \RuntimeException('Unable to create the temporary root directory');
         }
 
@@ -50,7 +50,7 @@ class FlywheelEventStoreAdapterTest extends TestCase
 
     protected function tearDown(): void
     {
-        if (!$this->removePath($this->rootDir)) {
+        if (! $this->removePath($this->rootDir)) {
             throw new \RuntimeException('Unable to remove the temporary root directory');
         }
     }
@@ -59,7 +59,7 @@ class FlywheelEventStoreAdapterTest extends TestCase
     {
         if (is_file($path)) {
             return @unlink($path);
-        } elseif (!is_dir($path)) {
+        } elseif (! is_dir($path)) {
             return false;
         }
 

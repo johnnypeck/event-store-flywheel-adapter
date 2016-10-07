@@ -21,7 +21,7 @@ use Prooph\Common\Messaging\MessageConverter;
 use Prooph\Common\Messaging\MessageFactory;
 use Prooph\Common\Messaging\NoOpMessageConverter;
 use Prooph\EventStore\Adapter\Flywheel\FlywheelEventStoreAdapter;
-use Prooph\EventStore\Exception\ConfigurationException;
+use Prooph\EventStore\Adapter\Exception\ConfigurationException;
 
 final class FlywheelEventStoreAdapterFactory implements RequiresConfig, RequiresMandatoryOptions
 {
@@ -55,7 +55,7 @@ final class FlywheelEventStoreAdapterFactory implements RequiresConfig, Requires
         $config = $this->options($config)['adapter']['options'];
 
         if (!is_dir($config['dir'])) {
-            throw ConfigurationException::configurationError(sprintf(
+            throw new ConfigurationException(sprintf(
                 '%s was not able to locate %s',
                 __CLASS__,
                 $config['dir']

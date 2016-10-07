@@ -89,25 +89,4 @@ class FlywheelEventStorageAdapterFactoryTest extends TestCase
 
         $factory($container->reveal());
     }
-
-    /**
-     * @test
-     */
-    public function it_throws_exception_if_adapter_options_are_not_available(): void
-    {
-        $this->expectException(\Interop\Config\Exception\MandatoryOptionNotFoundException::class);
-
-        $container = $this->prophesize(ContainerInterface::class);
-
-        $config['prooph']['event_store']['adapter']['options'] = [];
-
-        $container->has('config')->willReturn(true);
-        $container->get('config')->willReturn($config);
-        $container->has(MessageFactory::class)->willReturn(false);
-        $container->has(MessageConverter::class)->willReturn(false);
-
-        $factory = new FlywheelEventStoreAdapterFactory();
-
-        $factory($container->reveal());
-    }
 }
