@@ -29,7 +29,7 @@ class FlywheelEventStorageAdapterFactoryTest extends TestCase
     {
         $container = $this->prophesize(ContainerInterface::class);
 
-        $config['prooph']['event_store']['adapter']['options']['dir'] = __DIR__;
+        $config['prooph']['event_store']['default']['adapter']['options']['dir'] = __DIR__;
 
         $container->has('config')->willReturn(true);
         $container->get('config')->willReturn($config);
@@ -53,7 +53,7 @@ class FlywheelEventStorageAdapterFactoryTest extends TestCase
 
         $container = $this->prophesize(ContainerInterface::class);
 
-        $config['prooph']['event_store']['adapter']['options']['dir'] = __DIR__;
+        $config['prooph']['event_store']['default']['adapter']['options']['dir'] = __DIR__;
 
         $container->has('config')->willReturn(true);
         $container->get('config')->willReturn($config);
@@ -78,7 +78,7 @@ class FlywheelEventStorageAdapterFactoryTest extends TestCase
 
         $container = $this->prophesize(ContainerInterface::class);
 
-        $config['prooph']['event_store']['adapter']['options']['dir'] = 'not-found-dir';
+        $config['prooph']['event_store']['default']['adapter']['options']['dir'] = 'not-found-dir';
 
         $container->has('config')->willReturn(true);
         $container->get('config')->willReturn($config);
